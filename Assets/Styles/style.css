@@ -41,6 +41,27 @@ main {
     min-height: 400px;
 }
 
+.svg {
+    color: rgb(235, 30, 116);
+
+}
+
+.svg2 {
+    color: white;
+
+}
+
+.svg3 {
+    color: rgb(72, 70, 71);
+
+}
+
+.svg:hover {
+    background-color: white;
+    color: rgb(235, 30, 116);
+
+}
+
 @media screen and (max-width: 575px) {
 
     .formContainer {
@@ -61,15 +82,4 @@ main {
     .cardDetail {
         width: 80%;
     }
-}
-
-svg {
-    color: rgb(235, 30, 116);
-
-}
-
-svg:hover {
-    background-color: white;
-    color: rgb(235, 30, 116);
-
 }
