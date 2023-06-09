@@ -4,23 +4,23 @@ const events = data.events;
 
 let pastEventsArr = [];
 function pastEvents(events, currentDate) {
-    return events.filter((event) => {
-        const eventDate = new Date(event.date);
-        if (eventDate < currentDate) {
-            pastEventsArr.push(event);
-        }
-        return pastEventsArr;
-    });
+  return events.filter((event) => {
+    const eventDate = new Date(event.date);
+    if (eventDate < currentDate) {
+      pastEventsArr.push(event);
+    }
+    return pastEventsArr;
+  });
 }
 
-pastEvents(events, currentDate)
+pastEvents(events, currentDate);
 
-console.log("🚀 ~ file: home.js:20 ~ pastEventsArr:", pastEventsArr)
+console.log("🚀 ~ file: home.js:20 ~ pastEventsArr:", pastEventsArr);
 
 let htmlPast = "";
 
 for (let i = 0; i < pastEventsArr.length; i++) {
-    htmlPast += `
+  htmlPast += `
     
     <div class="card mx-3 mt-3" style="width: 18rem;">
                 <img src="${pastEventsArr[i].image}" class="cardImgStandard card-img-top" alt="...">
@@ -29,7 +29,7 @@ for (let i = 0; i < pastEventsArr.length; i++) {
                     <p class="card-text">${pastEventsArr[i].description}</p>
                     <div class="d-flex justify-content-between align-items-baseline w-100">
                         <p>${pastEventsArr[i].price}</p>
-                        <a href="http://127.0.0.1:5500/Assets/detail.html" class="btn btn-danger">Details</a>
+                        <a href="./detail.html?id=${pastEventsArr[i]._id}" class="btn btn-danger">Details</a>
                     </div>
                 </div>
             </div>
@@ -41,9 +41,3 @@ for (let i = 0; i < pastEventsArr.length; i++) {
 const pastEventsContainer = document.querySelector(".pastEventsContainer");
 
 pastEventsContainer.innerHTML = htmlPast;
-
-
-
-
-
-

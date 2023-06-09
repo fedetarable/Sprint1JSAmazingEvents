@@ -5,23 +5,26 @@ const events = data.events;
 let upcomingEventsArr = [];
 
 function upcomingEvents(events, currentDate) {
-    return events.filter((event) => {
-        const eventDate = new Date(event.date);
-        if (eventDate > currentDate) {
-            upcomingEventsArr.push(event);
-        }
-        return upcomingEventsArr;
-    });
+  return events.filter((event) => {
+    const eventDate = new Date(event.date);
+    if (eventDate > currentDate) {
+      upcomingEventsArr.push(event);
+    }
+    return upcomingEventsArr;
+  });
 }
 
-upcomingEvents(events, currentDate)
+upcomingEvents(events, currentDate);
 
-console.log("🚀 ~ file: home.js:22 ~ upcomingEventsArr:", upcomingEventsArr[0].image)
+console.log(
+  "🚀 ~ file: home.js:22 ~ upcomingEventsArr:",
+  upcomingEventsArr[0].image
+);
 
 let htmlUpcoming = "";
 
 for (let i = 0; i < upcomingEventsArr.length; i++) {
-    htmlUpcoming += `
+  htmlUpcoming += `
     
     <div class="card mx-3 mt-3" style="width: 18rem;">
                 <img src="${upcomingEventsArr[i].image}" class="cardImgStandard card-img-top" alt="...">
@@ -30,7 +33,7 @@ for (let i = 0; i < upcomingEventsArr.length; i++) {
                     <p class="card-text">${upcomingEventsArr[i].description}</p>
                     <div class="d-flex justify-content-between align-items-baseline w-100">
                         <p>${upcomingEventsArr[i].price}</p>
-                        <a href="http://127.0.0.1:5500/Assets/detail.html" class="btn btn-danger">Details</a>
+                        <a href="./detail.html?id=${upcomingEventsArr[i]._id}" class="btn btn-danger">Details</a>
                     </div>
                 </div>
             </div>
@@ -39,6 +42,8 @@ for (let i = 0; i < upcomingEventsArr.length; i++) {
     `;
 }
 
-const upcomingEventsContainer = document.querySelector(".upcomingEventsContainer");
+const upcomingEventsContainer = document.querySelector(
+  ".upcomingEventsContainer"
+);
 
 upcomingEventsContainer.innerHTML = htmlUpcoming;
