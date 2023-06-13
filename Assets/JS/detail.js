@@ -1,15 +1,34 @@
-const contenedorDetail = document.getElementById("contenedorDetail");
-const params = new URLSearchParams(window.location.search);
+const apiUrl = "https://mindhub-xj03.onrender.com/api/amazing";
+const data = [];
 
-const eid = params.get("id");
+async function getData() {
+  try {
+    const response = await fetch(apiUrl);
+    const result = await response.json();
+    data.push(result);
+  } catch (error) {
+    console.log("Ocurrió un error al obtener los datos:", error);
+  }
+}
 
-const idEncontrado = data.events.find((event) => event._id == eid);
+async function main() {
+  let events, currentDate;
+  await getData();
+  const contenedorDetail = document.getElementById("contenedorDetail");
+  const params = new URLSearchParams(window.location.search);
 
-contenedorDetail.innerHTML = `
+  events = data[0].events;
+  console.log(events);
+
+  const eid = params.get("id");
+
+  const idEncontrado = events.find((event) => event._id == eid);
+
+  contenedorDetail.innerHTML = `
 <div class="cardDetailImg d-flex flex-sm-column justify-content-center">
         <img class="imgDetail" src="${idEncontrado.image}" alt="${
-  idEncontrado.name
-}" />
+    idEncontrado.name
+  }" />
 </div>
 <section class="sectionDetail d-flex flex-column justify-content-center align-items-center bg-light p-3">
         <h3>${idEncontrado.name}</h3>
@@ -33,3 +52,6 @@ contenedorDetail.innerHTML = `
         </div>
         <a class="btn btn-primary" href="#" role="button">Comprar</a>
     </section>`;
+}
+
+main();

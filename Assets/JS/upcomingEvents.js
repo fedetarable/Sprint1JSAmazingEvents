@@ -1,43 +1,58 @@
-const currentDate = new Date(data.currentDate);
+const apiUrl = "https://mindhub-xj03.onrender.com/api/amazing";
+const data = [];
 
-const events = data.events;
-
-let upcomingEventsArr = [];
-
-function upcomingEvents(events, currentDate) {
-  return events.filter((event) => {
-    const eventDate = new Date(event.date);
-    if (eventDate > currentDate) {
-      upcomingEventsArr.push(event);
-    }
-    return upcomingEventsArr;
-  });
+async function getData() {
+  try {
+    const response = await fetch(apiUrl);
+    const result = await response.json();
+    data.push(result);
+  } catch (error) {
+    console.log("Ocurrió un error al obtener los datos:", error);
+  }
 }
 
-upcomingEvents(events, currentDate);
+async function main() {
+  let events, currentDate;
+  await getData();
+  events = data[0].events;
+  currentDate = new Date(data[0].currentDate);
 
-const searchBar = document.querySelector(".searchBar");
+  let upcomingEventsArr = [];
 
-searchBar.addEventListener("keyup", (e) => {
-  const arrayYaBuscado = filtrarPorBusqueda(upcomingEventsArr);
+  function upcomingEvents(events, currentDate) {
+    return events.filter((event) => {
+      const eventDate = new Date(event.date);
+      if (eventDate > currentDate) {
+        upcomingEventsArr.push(event);
+      }
+      return upcomingEventsArr;
+    });
+  }
 
-  const arrayfinal = filtrarPorChek(arrayYaBuscado, selectedValues);
-  displayEvents(arrayfinal);
-});
+  upcomingEvents(events, currentDate);
 
-function filtrarPorBusqueda(events) {
-  const searchString = searchBar.value.toLowerCase();
-  return events.filter((event) => {
-    return event.name.toLowerCase().includes(searchString);
+  const searchBar = document.querySelector(".searchBar");
+
+  searchBar.addEventListener("keyup", (e) => {
+    const arrayYaBuscado = filtrarPorBusqueda(upcomingEventsArr);
+
+    const arrayfinal = filtrarPorChek(arrayYaBuscado, selectedValues);
+    displayEvents(arrayfinal);
   });
-}
 
-let htmlUpcoming = "";
+  function filtrarPorBusqueda(events) {
+    const searchString = searchBar.value.toLowerCase();
+    return events.filter((event) => {
+      return event.name.toLowerCase().includes(searchString);
+    });
+  }
 
-const displayEvents = (events) => {
-  const htmlString = events
-    .map((event) => {
-      return `
+  let htmlUpcoming = "";
+
+  const displayEvents = (events) => {
+    const htmlString = events
+      .map((event) => {
+        return `
             <div class="card mx-3 mt-3" style="width: 18rem;">
                 <img src="${event.image}" class="cardImgStandard card-img-top" alt="...">
                 <div class="card-body d-flex flex-column align-items-center">
@@ -45,37 +60,37 @@ const displayEvents = (events) => {
                     <p class="card-text">${event.description}</p>
                     <div class="d-flex justify-content-between align-items-baseline w-100">
                         <p>${event.price}</p>
-                        <a href="./Assets/detail.html?id=${event._id}" class="btn btn-danger">Details</a>
+                        <a href="./detail.html?id=${event._id}" class="btn btn-danger">Details</a>
                     </div>
                 </div>
             </div>
             `;
+      })
+      .join("");
+    upcomingEventsContainer.innerHTML = htmlString;
+  };
+
+  const upcomingEventsContainer = document.querySelector(
+    ".upcomingEventsContainer"
+  );
+
+  upcomingEventsContainer.innerHTML = htmlUpcoming;
+
+  displayEvents(upcomingEventsArr);
+
+  const categories = events
+    .map((event) => {
+      return event.category;
     })
-    .join("");
-  upcomingEventsContainer.innerHTML = htmlString;
-};
+    .filter((value, index, self) => {
+      return self.indexOf(value) === index;
+    });
 
-const upcomingEventsContainer = document.querySelector(
-  ".upcomingEventsContainer"
-);
+  const categoriesContainer = document.querySelector(".categoriesContainer");
+  let htmlCategories = "";
 
-upcomingEventsContainer.innerHTML = htmlUpcoming;
-
-displayEvents(upcomingEventsArr);
-
-const categories = events
-  .map((event) => {
-    return event.category;
-  })
-  .filter((value, index, self) => {
-    return self.indexOf(value) === index;
-  });
-
-const categoriesContainer = document.querySelector(".categoriesContainer");
-let htmlCategories = "";
-
-for (let i = 0; i < categories.length; i++) {
-  htmlCategories += `
+  for (let i = 0; i < categories.length; i++) {
+    htmlCategories += `
     <div class="form-check">
         <input class="form-check-input" type="checkbox" value="${categories[i]}" id="flexCheckDefault${i}">
         <label class="form-check-label" for="flexCheckDefault${i}">
@@ -84,43 +99,46 @@ for (let i = 0; i < categories.length; i++) {
     </div>
     `;
 
-  categoriesContainer.innerHTML = htmlCategories;
-}
+    categoriesContainer.innerHTML = htmlCategories;
+  }
 
-const checkboxes = document.querySelectorAll(".form-check-input");
+  const checkboxes = document.querySelectorAll(".form-check-input");
 
-const selectedValues = [];
+  const selectedValues = [];
 
-checkboxes.forEach((checkbox) => {
-  checkbox.addEventListener("change", (e) => {
-    const checked = e.target.checked;
-    const value = e.target.value;
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", (e) => {
+      const checked = e.target.checked;
+      const value = e.target.value;
 
-    if (checked) {
-      selectedValues.push(value);
-    } else {
-      const index = selectedValues.indexOf(value);
-      if (index > -1) {
-        selectedValues.splice(index, 1);
+      if (checked) {
+        selectedValues.push(value);
+      } else {
+        const index = selectedValues.indexOf(value);
+        if (index > -1) {
+          selectedValues.splice(index, 1);
+        }
       }
-    }
-    const arrayYaBuscado = filtrarPorBusqueda(upcomingEventsArr);
+      const arrayYaBuscado = filtrarPorBusqueda(upcomingEventsArr);
 
-    const arrayfinal = filtrarPorChek(arrayYaBuscado, selectedValues);
+      const arrayfinal = filtrarPorChek(arrayYaBuscado, selectedValues);
 
-    displayEvents(arrayfinal);
-  });
-});
-
-function filtrarPorChek(arrayEv, selectedValues) {
-  if (selectedValues.length > 0) {
-    const filteredEvents = arrayEv.filter((event) => {
-      return selectedValues.some((selectedValue) =>
-        event.category.includes(selectedValue)
-      );
+      displayEvents(arrayfinal);
     });
-    return filteredEvents;
-  } else {
-    return arrayEv;
+  });
+
+  function filtrarPorChek(arrayEv, selectedValues) {
+    if (selectedValues.length > 0) {
+      const filteredEvents = arrayEv.filter((event) => {
+        return selectedValues.some((selectedValue) =>
+          event.category.includes(selectedValue)
+        );
+      });
+      return filteredEvents;
+    } else {
+      return arrayEv;
+    }
   }
 }
+
+main();
