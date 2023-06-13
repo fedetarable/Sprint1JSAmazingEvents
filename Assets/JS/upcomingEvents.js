@@ -45,7 +45,7 @@ const displayEvents = (events) => {
                     <p class="card-text">${event.description}</p>
                     <div class="d-flex justify-content-between align-items-baseline w-100">
                         <p>${event.price}</p>
-                        <a href="./Assets/detail.html?id=${event._id}" class="btn btn-danger">Details</a>
+                        <a href="./detail.html?id=${event._id}" class="btn btn-danger">Details</a>
                     </div>
                 </div>
             </div>
