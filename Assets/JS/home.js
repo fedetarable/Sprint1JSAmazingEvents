@@ -95,7 +95,6 @@ for (let i = 0; i < categories.length; i++) {
 }
 
 const checkboxes = document.querySelectorAll(".form-check-input");
-console.log(checkboxes);
 
 const selectedValues = [];
 
