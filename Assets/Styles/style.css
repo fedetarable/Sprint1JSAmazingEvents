@@ -65,6 +65,12 @@ main {
     width: 400px;
     height: 250px;
 }
+table, th, td {
+    border: 3px solid rgb(8, 7, 7) !important;
+    height: 3rem !important;
+    margin: 3rem 0 !important;
+    min-width: 25rem !important;
+}
 
 @media screen and (max-width: 575px) {
 
