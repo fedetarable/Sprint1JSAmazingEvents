@@ -1,79 +1,32 @@
-const apiUrl = "https://mindhub-xj03.onrender.com/api/amazing";
-const data = [];
-
-async function getData() {
-  try {
-    const response = await fetch(apiUrl);
-    const result = await response.json();
-    data.push(result);
-  } catch (error) {
-    console.log("Ocurrió un error al obtener los datos:", error);
-  }
-}
+import {
+  getData,
+  pastEvents,
+  filtrarPorBusqueda,
+  displayEvents,
+  filtrarPorChek,
+} from "./module/function.js";
 
 async function main() {
-  let events, currentDate;
-  await getData();
-  events = data[0].events;
-  currentDate = new Date(data[0].currentDate);
+  let currentDate;
+  const data = await getData();
+  const events = data.events;
 
-  let pastEventsArr = [];
-  function pastEvents(events, currentDate) {
-    return events.filter((event) => {
-      const eventDate = new Date(event.date);
-      if (eventDate < currentDate) {
-        pastEventsArr.push(event);
-      }
-      return pastEventsArr;
-    });
-  }
+  currentDate = new Date(data.currentDate);
 
-  pastEvents(events, currentDate);
+  let pastEventsArr = pastEvents(events, currentDate);
 
   const searchBar = document.querySelector(".searchBar");
 
   searchBar.addEventListener("keyup", (e) => {
-    const arrayYaBuscado = filtrarPorBusqueda(pastEventsArr);
+    const arrayYaBuscado = filtrarPorBusqueda(pastEventsArr, searchBar);
 
     const arrayfinal = filtrarPorChek(arrayYaBuscado, selectedValues);
-    displayEvents(arrayfinal);
+    displayEvents(arrayfinal, pastEventsContainer, true);
   });
-
-  function filtrarPorBusqueda(events) {
-    const searchString = searchBar.value.toLowerCase();
-    return events.filter((event) => {
-      return event.name.toLowerCase().includes(searchString);
-    });
-  }
-
-  let htmlPast = "";
-
-  const displayEvents = (events) => {
-    const htmlString = events
-      .map((event) => {
-        return `
-            <div class="card mx-3 mt-3" style="width: 18rem;">
-                <img src="${event.image}" class="cardImgStandard card-img-top" alt="...">
-                <div class="card-body d-flex flex-column align-items-center">
-                    <h5 class="card-title">${event.name}</h5>
-                    <p class="card-text">${event.description}</p>
-                    <div class="d-flex justify-content-between align-items-baseline w-100">
-                        <p>${event.price}</p>
-                        <a href="./detail.html?id=${event._id}" class="btn btn-danger">Details</a>
-                    </div>
-                </div>
-            </div>
-            `;
-      })
-      .join("");
-    pastEventsContainer.innerHTML = htmlString;
-  };
 
   const pastEventsContainer = document.querySelector(".pastEventsContainer");
 
-  pastEventsContainer.innerHTML = htmlPast;
-
-  displayEvents(pastEventsArr);
+  displayEvents(pastEventsArr, pastEventsContainer, true);
 
   const categories = pastEventsArr
     .map((event) => {
@@ -88,7 +41,7 @@ async function main() {
 
   for (let i = 0; i < categories.length; i++) {
     htmlCategories += `
-    <div class="form-check">
+    <div class="form-check mx-2">
         <input class="form-check-input" type="checkbox" value="${categories[i]}" id="flexCheckDefault${i}">
         <label class="form-check-label" for="flexCheckDefault${i}">
             ${categories[i]}
@@ -116,26 +69,13 @@ async function main() {
           selectedValues.splice(index, 1);
         }
       }
-      const arrayYaBuscado = filtrarPorBusqueda(pastEventsArr);
+      const arrayYaBuscado = filtrarPorBusqueda(pastEventsArr, searchBar);
 
       const arrayfinal = filtrarPorChek(arrayYaBuscado, selectedValues);
 
-      displayEvents(arrayfinal);
+      displayEvents(arrayfinal, pastEventsContainer, true);
     });
   });
-
-  function filtrarPorChek(arrayEv, selectedValues) {
-    if (selectedValues.length > 0) {
-      const filteredEvents = arrayEv.filter((event) => {
-        return selectedValues.some((selectedValue) =>
-          event.category.includes(selectedValue)
-        );
-      });
-      return filteredEvents;
-    } else {
-      return arrayEv;
-    }
-  }
 }
 
 main();

@@ -70,6 +70,12 @@ table, th, td {
     height: 3rem !important;
     margin: 3rem 0 !important;
     min-width: 25rem !important;
+    text-align: center !important;
+}
+
+tr:hover {
+    background-color: rgb(235, 30, 116) !important;
+    color: white !important;
 }
 
 @media screen and (max-width: 575px) {

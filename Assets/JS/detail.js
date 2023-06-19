@@ -1,24 +1,11 @@
-const apiUrl = "https://mindhub-xj03.onrender.com/api/amazing";
-const data = [];
-
-async function getData() {
-  try {
-    const response = await fetch(apiUrl);
-    const result = await response.json();
-    data.push(result);
-  } catch (error) {
-    console.log("Ocurrió un error al obtener los datos:", error);
-  }
-}
+import { getData } from "./module/function.js";
 
 async function main() {
-  let events, currentDate;
-  await getData();
-  const contenedorDetail = document.getElementById("contenedorDetail");
-  const params = new URLSearchParams(window.location.search);
+  const data = await getData();
+  const events = data.events;
 
-  events = data[0].events;
-  console.log(events);
+  const params = new URLSearchParams(window.location.search);
+  const contenedorDetail = document.getElementById("contenedorDetail");
 
   const eid = params.get("id");
 
